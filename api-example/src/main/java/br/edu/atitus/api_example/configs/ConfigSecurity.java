@@ -11,27 +11,31 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class ConfigSecurity {
 
-	@Bean
-	SecurityFilterChain getSecurityFilter(HttpSecurity http) throws Exception{
-		http.sessionManagement(session -> session
-				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Desabilita seções
-			.csrf(csrf -> csrf.disable()) //Desabilita protecao CSRF
-			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/ws**","/ws/**").authenticated()
-				.anyRequest().permitAll());
-		
-		return http.build();
-	}
-	
-	@Bean
-	PasswordEncoder getPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-	
-	
-	
-	
-	
-	
-	
-}
+    @Bean
+    SecurityFilterChain getSecurityFilter(HttpSecurity http) throws Exception{
+        http.sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //Desabilita seções
+                .csrf(csrf -> csrf.disable()) //Desabilita protecao CSRF
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/ws**","/ws/**").authenticated()
+                        .anyRequest().permitAll());
+
+        return http.build();
+    }
+
+    @Bean
+    PasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Autowired
+    private AuthTokenFilter authTokenFilter;
+
+    @Bean
+    SecurityFilterChain getSecurityFilter(HttpSecurity http) throws Exception {
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+
+
+
+

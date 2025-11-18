@@ -21,75 +21,75 @@ import jakarta.persistence.Table;
 @Table(name = "tb_user")
 public class UserEntity implements UserDetails{
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.UUID)
-	private UUID id;
+    @Id
+    @GeneratedValue(strategy=GenerationType.UUID)
+    private UUID id;
 
-	@Column(length = 100, nullable = false)
-	private String name;
-	
-	@Column(length = 100, nullable = false)
-	private String email;
-	
-	@JsonIgnore
-	@Column(length = 100, nullable = false)
-	private String password;
-	
-	@Enumerated(EnumType.ORDINAL)
-	private TypeUser type;
+    @Column(length = 100, nullable = false)
+    private String name;
 
-	public UUID getId() {
-		return id;
-	}
+    @Column(length = 100, nullable = false)
+    private String email;
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    @JsonIgnore
+    @Column(length = 100, nullable = false)
+    private String password;
 
-	public String getName() {
-		return name;
-	}
+    @Enumerated(EnumType.ORDINAL)
+    private TypeUser type;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public TypeUser getType() {
-		return type;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setType(TypeUser type) {
-		this.type = type;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
-	
-	
-	
-	
+    public TypeUser getType() {
+        return type;
+    }
+
+    public void setType(TypeUser type) {
+        this.type = type;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+
+
+
 }
