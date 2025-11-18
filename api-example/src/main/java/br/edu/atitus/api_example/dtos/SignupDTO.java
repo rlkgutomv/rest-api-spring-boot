@@ -10,8 +10,8 @@ public record SignupDTO(
 
         @NotBlank(message = "Email é obrigatório")
         @Pattern(
-                regexp = "^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}(\\.[a-zA-Z]{2,})?$",
-                message = "Email inválido. Use um formato como nome@dominio.com ou nome@dominio.com.br"
+                regexp = "^[\\w.-]+@(gmail\\.com|bol\\.com\\.br)$",
+                message = "Email inválido. Use apenas @gmail.com ou @bol.com.br"
         )
         String email,
 

@@ -1,6 +1,7 @@
 package br.edu.atitus.api_example.entities;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -80,8 +81,7 @@ public class UserEntity implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO Auto-generated method stub
-        return null;
+        return List.of(() -> "ROLE_" + type.name());
     }
 
     @Override
