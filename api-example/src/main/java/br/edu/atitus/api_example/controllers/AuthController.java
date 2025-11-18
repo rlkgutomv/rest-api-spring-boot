@@ -1,60 +1,40 @@
 package br.edu.atitus.api_example.controllers;
 
-import org.springframework.beans.BeanUtils;
-import org.springframework.http.ResponseEntity;
+import br.edu.atitus.api_example.security.JwtService;
+import br.edu.atitus.api_example.repositories.UserRepository;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-import br.edu.atitus.api_example.dtos.SigninDTO;
-import br.edu.atitus.api_example.dtos.SignupDTO;
-import br.edu.atitus.api_example.entities.TypeUser;
-import br.edu.atitus.api_example.entities.UserEntity;
-import br.edu.atitus.api_example.services.UserService;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService service;
-    private final AuthenticationConfiguration authConfig;
+    private final AuthenticationManager authManager;
+    private final JwtService jwtService;
 
-    public AuthController(UserService service, AuthenticationConfiguration authConfig) {
-        this.service = service;
-        this.authConfig = authConfig;
+    public AuthController(AuthenticationManager authManager, JwtService jwtService) {
+        this.authManager = authManager;
+        this.jwtService = jwtService;
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<UserEntity> postSignup(
-            @Valid @RequestBody SignupDTO dto) throws Exception {
+    @PostMapping("/login")
+    public Map<String, Object> login(@RequestBody Map<String, String> body) {
+        Authentication auth = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(body.get("email"), body.get("password"))
+        );
 
-        UserEntity user = new UserEntity();
-        BeanUtils.copyProperties(dto, user);
-        user.setType(TypeUser.Common);
+        UserDetails user = (UserDetails) auth.getPrincipal();
+        String token = jwtService.generateToken(user);
 
-        service.save(user);
-
-        return ResponseEntity.status(201).body(user);
-    }
-
-    @PostMapping("/signin")
-    public ResponseEntity<String> postSignin(
-            @RequestBody SigninDTO dto) throws AuthenticationException, Exception {
-
-        authConfig.getAuthenticationManager().authenticate(
-                new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
-
-        return ResponseEntity.ok("JWT");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> exceptionHandler(Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+        return Map.of(
+                "token", token,
+                "email", user.getUsername()
+        );
     }
 }

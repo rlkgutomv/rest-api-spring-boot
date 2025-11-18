@@ -4,6 +4,8 @@ import br.edu.atitus.api_example.security.AuthTokenFilter;
 import br.edu.atitus.api_example.security.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,11 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class ConfigSecurity {
 
-
+    // expõe o AuthenticationManager usado pelo AuthController para autenticar credenciais
     @Bean
-    public AuthTokenFilter authTokenFilter(JwtService jwtService,
-                                           UserDetailsService userDetailsService) {
-        return new AuthTokenFilter(jwtService, userDetailsService);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
     }
 
     @Bean
@@ -30,7 +31,8 @@ public class ConfigSecurity {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ws**", "/ws/**").authenticated()
+                        .requestMatchers("/auth/**").permitAll()   // libera login/registro
+                        .requestMatchers("/ws/**").authenticated() // protege ws
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
@@ -42,4 +44,10 @@ public class ConfigSecurity {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthTokenFilter authTokenFilter(JwtService jwtService, UserDetailsService userDetailsService) {
+        return new AuthTokenFilter(jwtService, userDetailsService);
+    }
+
 }
