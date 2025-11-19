@@ -1,7 +1,6 @@
 package br.edu.atitus.api_example.entities;
 
 import java.util.UUID;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -5,7 +5,6 @@ import br.edu.atitus.api_example.entities.RestauranteEntity;
 import br.edu.atitus.api_example.entities.UserEntity;
 import br.edu.atitus.api_example.repositories.RestauranteRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -18,9 +17,7 @@ public class RestauranteService {
         this.repository = repository;
     }
 
-    // ===============================
-    // CRIAR RESTAURANTE
-    // ===============================
+
     public RestauranteEntity create(RestauranteRequestDTO dto, UserEntity user) {
 
         if (dto.description() == null || dto.description().trim().isEmpty()) {
@@ -59,9 +56,7 @@ public class RestauranteService {
         return repository.save(entity);
     }
 
-    // ===============================
-    // ATUALIZAR RESTAURANTE
-    // ===============================
+
     public RestauranteEntity update(UUID id, RestauranteRequestDTO dto, UserEntity user) {
 
         RestauranteEntity entity = repository.findByIdAndUserId(id, user.getId())
@@ -102,24 +97,17 @@ public class RestauranteService {
         return repository.save(entity);
     }
 
-    // ===============================
-    // LISTAR RESTAURANTES DO USUÁRIO
-    // ===============================
+
     public List<RestauranteEntity> findAllByUser(UserEntity user) {
         return repository.findByUserId(user.getId());
     }
 
-    // ===============================
-    // BUSCAR POR ID (do usuário)
-    // ===============================
+
     public RestauranteEntity findByIdAndUser(UUID id, UserEntity user) {
         return repository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new RuntimeException("Restaurante não encontrado ou não pertence ao usuário."));
     }
 
-    // ===============================
-    // DELETAR RESTAURANTE
-    // ===============================
     public void delete(UUID id, UserEntity user) {
         RestauranteEntity entity = repository.findByIdAndUserId(id, user.getId())
                 .orElseThrow(() -> new RuntimeException("Restaurante não encontrado ou não pertence ao usuário."));

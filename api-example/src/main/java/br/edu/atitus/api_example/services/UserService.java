@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import br.edu.atitus.api_example.entities.UserEntity;
 import br.edu.atitus.api_example.repositories.UserRepository;
 
@@ -25,7 +24,7 @@ public class UserService implements UserDetailsService {
         if (repository.existsByEmail(user.getEmail()))
             throw new Exception("Já existe usuário cadastrado com este e-mail");
 
-        // Senha já foi validada pelo DTO → apenas criptografa
+
         user.setPassword(encoder.encode(user.getPassword()));
 
         return repository.save(user);

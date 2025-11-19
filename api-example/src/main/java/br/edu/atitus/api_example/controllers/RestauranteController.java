@@ -29,7 +29,7 @@ public class RestauranteController {
         return (UserEntity) userService.loadUserByUsername(email);
     }
 
-    // CRIAR restaurante
+
     @PostMapping
     public RestauranteResponseDTO create(@RequestBody RestauranteRequestDTO dto) {
         UserEntity user = getLoggedUser();
@@ -43,7 +43,7 @@ public class RestauranteController {
         );
     }
 
-    // ATUALIZAR restaurante
+
     @PutMapping("/{id}")
     public RestauranteResponseDTO update(
             @PathVariable UUID id,
@@ -60,7 +60,7 @@ public class RestauranteController {
         );
     }
 
-    // LISTAR restaurantes do usuário
+
     @GetMapping
     public List<RestauranteResponseDTO> getAll() {
         UserEntity user = getLoggedUser();
@@ -71,7 +71,7 @@ public class RestauranteController {
                 )).toList();
     }
 
-    // BUSCAR restaurante por ID
+
     @GetMapping("/{id}")
     public RestauranteResponseDTO getById(@PathVariable UUID id) throws Exception {
         UserEntity user = getLoggedUser();
@@ -82,7 +82,7 @@ public class RestauranteController {
         );
     }
 
-    // DELETAR restaurante (opcional)
+
     @DeleteMapping("/{id}")
     public String delete(@PathVariable UUID id) throws Exception {
         UserEntity user = getLoggedUser();

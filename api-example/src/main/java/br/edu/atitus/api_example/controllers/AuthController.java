@@ -1,12 +1,10 @@
 package br.edu.atitus.api_example.controllers;
 
 import br.edu.atitus.api_example.security.JwtService;
-import br.edu.atitus.api_example.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;

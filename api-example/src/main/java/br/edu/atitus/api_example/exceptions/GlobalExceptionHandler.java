@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,45 +15,34 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // =============================
-    // LOGIN INCORRETO (senha/email)
-    // =============================
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentials() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Email ou senha inválidos"));
     }
 
-    // =============================
-    // TOKEN EXPIRADO
-    // =============================
+
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<?> handleExpiredToken() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Token expirado. Faça login novamente."));
     }
 
-    // =============================
-    // TOKEN MAL FORMADO
-    // =============================
+
     @ExceptionHandler(MalformedJwtException.class)
     public ResponseEntity<?> handleMalformedToken() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Token inválido ou corrompido."));
     }
 
-    // =============================
-    // SEM TOKEN OU TOKEN INVÁLIDO
-    // =============================
+
     @ExceptionHandler(InsufficientAuthenticationException.class)
     public ResponseEntity<?> handleNoToken() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", "Autenticação necessária."));
     }
 
-    // =============================
-    // ERROS DE VALIDAÇÃO DO DTO
-    // =============================
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> handleValidationErrors(MethodArgumentNotValidException e) {
 
@@ -67,9 +55,7 @@ public class GlobalExceptionHandler {
                 .body(Map.of("error", message));
     }
 
-    // =============================
-    // ERROS DO SERVICE (suas regras)
-    // =============================
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGenericException(Exception e) {
         return ResponseEntity.badRequest()
