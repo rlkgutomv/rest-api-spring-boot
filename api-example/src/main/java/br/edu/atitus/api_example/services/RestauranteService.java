@@ -21,26 +21,24 @@ public class RestauranteService {
     // ===============================
     // CRIAR RESTAURANTE
     // ===============================
-    public RestauranteEntity create(RestauranteRequestDTO dto, UserEntity user) throws Exception {
+    public RestauranteEntity create(RestauranteRequestDTO dto, UserEntity user) {
 
-        // Validações obrigatórias
         if (dto.description() == null || dto.description().trim().isEmpty()) {
-            throw new Exception("A descrição é obrigatória.");
+            throw new RuntimeException("A descrição é obrigatória.");
         }
 
         if (dto.description().length() < 3) {
-            throw new Exception("A descrição deve ter no mínimo 3 caracteres.");
+            throw new RuntimeException("A descrição deve ter no mínimo 3 caracteres.");
         }
 
         if (dto.latitude() < -90 || dto.latitude() > 90) {
-            throw new Exception("Latitude inválida. Deve estar entre -90 e 90.");
+            throw new RuntimeException("Latitude inválida. Deve estar entre -90 e 90.");
         }
 
         if (dto.longitude() < -180 || dto.longitude() > 180) {
-            throw new Exception("Longitude inválida. Deve estar entre -180 e 180.");
+            throw new RuntimeException("Longitude inválida. Deve estar entre -180 e 180.");
         }
 
-        // Verifica duplicação de coordenadas para o mesmo usuário
         boolean localDuplicado = repository.findByUserId(user.getId())
                 .stream()
                 .anyMatch(r ->
@@ -49,10 +47,9 @@ public class RestauranteService {
                 );
 
         if (localDuplicado) {
-            throw new Exception("Você já cadastrou um restaurante nesse mesmo local.");
+            throw new RuntimeException("Você já cadastrou um restaurante nesse mesmo local.");
         }
 
-        // Criação da entidade
         RestauranteEntity entity = new RestauranteEntity();
         entity.setDescription(dto.description());
         entity.setLatitude(dto.latitude());
@@ -65,29 +62,27 @@ public class RestauranteService {
     // ===============================
     // ATUALIZAR RESTAURANTE
     // ===============================
-    public RestauranteEntity update(UUID id, RestauranteRequestDTO dto, UserEntity user) throws Exception {
+    public RestauranteEntity update(UUID id, RestauranteRequestDTO dto, UserEntity user) {
 
         RestauranteEntity entity = repository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new Exception("Restaurante não encontrado ou não pertence ao usuário"));
+                .orElseThrow(() -> new RuntimeException("Restaurante não encontrado ou não pertence ao usuário."));
 
-        // Regras obrigatórias (mesmas do create)
         if (dto.description() == null || dto.description().trim().isEmpty()) {
-            throw new Exception("A descrição é obrigatória.");
+            throw new RuntimeException("A descrição é obrigatória.");
         }
 
         if (dto.description().length() < 3) {
-            throw new Exception("A descrição deve ter no mínimo 3 caracteres.");
+            throw new RuntimeException("A descrição deve ter no mínimo 3 caracteres.");
         }
 
         if (dto.latitude() < -90 || dto.latitude() > 90) {
-            throw new Exception("Latitude inválida. Deve estar entre -90 e 90.");
+            throw new RuntimeException("Latitude inválida. Deve estar entre -90 e 90.");
         }
 
         if (dto.longitude() < -180 || dto.longitude() > 180) {
-            throw new Exception("Longitude inválida. Deve estar entre -180 e 180.");
+            throw new RuntimeException("Longitude inválida. Deve estar entre -180 e 180.");
         }
 
-        // Verifica duplicação de localização para outro restaurante do mesmo usuário
         boolean localDuplicado = repository.findByUserId(user.getId())
                 .stream()
                 .anyMatch(r ->
@@ -97,7 +92,7 @@ public class RestauranteService {
                 );
 
         if (localDuplicado) {
-            throw new Exception("Você já possui outro restaurante nesse local.");
+            throw new RuntimeException("Você já possui outro restaurante nesse local.");
         }
 
         entity.setDescription(dto.description());
@@ -115,19 +110,19 @@ public class RestauranteService {
     }
 
     // ===============================
-    // BUSCAR POR ID (somente do usuário)
+    // BUSCAR POR ID (do usuário)
     // ===============================
-    public RestauranteEntity findByIdAndUser(UUID id, UserEntity user) throws Exception {
+    public RestauranteEntity findByIdAndUser(UUID id, UserEntity user) {
         return repository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new Exception("Restaurante não encontrado ou não pertence ao usuário"));
+                .orElseThrow(() -> new RuntimeException("Restaurante não encontrado ou não pertence ao usuário."));
     }
 
     // ===============================
     // DELETAR RESTAURANTE
     // ===============================
-    public void delete(UUID id, UserEntity user) throws Exception {
+    public void delete(UUID id, UserEntity user) {
         RestauranteEntity entity = repository.findByIdAndUserId(id, user.getId())
-                .orElseThrow(() -> new Exception("Restaurante não encontrado ou não pertence ao usuário"));
+                .orElseThrow(() -> new RuntimeException("Restaurante não encontrado ou não pertence ao usuário."));
 
         repository.delete(entity);
     }
